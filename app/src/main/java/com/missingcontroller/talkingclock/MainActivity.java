@@ -54,20 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myThread = new Thread(runnable);
         myThread.start();
 
-        cal = Calendar.getInstance();
-        String now = "" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
-        current = cal.get(Calendar.MINUTE);
-        time.setText(now);
+        setTime();
     }
 
     public void doWork() {
         runOnUiThread(new Runnable() {
             public void run() {
-                int test;
                 try {
-                    cal = Calendar.getInstance();
-                    String now = "" + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.AM_PM);
-                    time.setText(now);
+                    setTime();
 
                     if (current != cal.get(Calendar.MINUTE)) {
                         talk();
@@ -108,6 +102,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void talk() {
         tts.speak(time.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void setTime() {
+        cal = Calendar.getInstance();
+        String now = "" + cal.get(Calendar.HOUR) + ":" + String.format("%02d", cal.get(Calendar.MINUTE)) + " ";
+        if(cal.get(Calendar.AM_PM) == 0)
+        {
+            now += "AM";
+        }
+        else
+        {
+            now += "PM";
+        }
+        time.setText(now);
     }
 
     protected void onDestroy() {
